@@ -13,6 +13,12 @@
 
 void LineBuild(int x1, int y1, int x2, int y2) //координаты 2х точек
 {
+	int row, col; //оцентровка
+	getmaxyx(stdscr, row, col);
+	x1 = x1 + (col/2);
+	x2 = x2 + (col/2);
+	y1 = y1 + (row/2);
+	y2 = y2 + (row/2);
 	
 	//printw("debug");
 	
@@ -91,10 +97,10 @@ void main()
 	int Depth;
 	
 	//printf("test");
-	LineBuild(1,1,2,9);
-	LineBuild(2,9,11,10);
-	LineBuild(11,10,10,2);
-	LineBuild(1,1,10,2);
+	LineBuild(-5,-5,5,-5); 
+	LineBuild(5,-5,5,5);
+	LineBuild(5,5,-5,5);
+	LineBuild(-5,5,-5,-5);
 	
 	getmaxyx(stdscr, row, col);
 	mvwprintw(stdscr, row - 1, 0, "The number of rows - %d and columns - %d\n", row, col);
