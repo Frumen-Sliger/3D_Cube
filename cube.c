@@ -13,70 +13,69 @@
 
 void LineBuild(int x1, int y1, int x2, int y2) //координаты 2х точек
 {
-	int x =x1, y =y1, f =0;
+	
+	//printw("debug");
+	
+	int Y = y2-y1; //разница у
+	int X = x1-x2; //разница х
+	int sign;
 	int dirY, dirX;
 	
-	int deltaX = abs(x2-x1); //разница х
-	int deltaY = abs(y2-y1); //разница у
-	int delta;
-	
-	/* ------		  Подготовка параметров  		------ */
-	if (deltaY > 0)
-		dirY = 1;
-	else				//if (deltaY < 0)
+	/* ------	Подготовка параметров	------ */
+	if (abs(Y) > abs(X))
+		sign = 1;
+	else				//if (abs(Y) < abs(X))
+		sign = -1;
+		
+	if (Y < 0)
 		dirY = -1;
+	else				//if (deltaY < 0)
+		dirY = 1;
 		
-	if (deltaX > 0)
-		dirX = 1;
-	else				//if (deltaX < 0)
+	if (X < 0)
 		dirX = -1;
-		
-	if (deltaY > deltaX)
-		delta = 1;
-	else				//if (deltaY < deltaX)
-		delta = -1;
+	else				//if (deltaX < 0)
+		dirX = 1;
 	
-	/* ------   Вывод 1 точки на нужную координату   ------ */
-	mvwprintw(stdscr, y1, x1, "");
-	addch('1' | A_STANDOUT);
+	/* ------	Вывод 1 точки на нужную координату	------ */
+	move(y1, x1);
+	addch(' ' | A_STANDOUT);
 	
-	/* ------ Генерация (с выводом) линии до 2 точки ------ */
-	for (x = x1; x < x2; x++)
+	/* ------	Генерация (с выводом) линии до 2 точки	------ */
+	int x =x1, y =y1, f =0;
+	if (sign == -1)
 	{
-		if (delta == -1)
+		do
 		{
-			do
+			f = f+ (Y*dirY);
+			if(f > 0)
 			{
-				f += deltaY*dirY;
-				if(f > 0)
-				{
-					f -= deltaX*dirX;
-					y += deltaY;
-				}
-			x -= deltaX;
+				f =f- (X*dirX);
+				y =y+ dirY;
+			}
+			x =x- dirX;
 			
-			mvwprintw(stdscr, y, x, "");
-			addch('1' | A_STANDOUT);
-			} 
-			while (x != x2 || y != y2);
+			move(y, x);
+			addch(' ' | A_STANDOUT);
 		} 
-		else
+		while (x != x2 || y != y2);
+	} 
+	else
+	{
+		do
 		{
-			do
+			f =f+ (X*dirX);
+			if(f > 0)
 			{
-				f += deltaX*dirX;
-				if(f > 0)
-				{
-					f -= deltaY*dirY;
-					x += deltaX;
-				}
-			y -= deltaY;
+				f =f- (Y*dirY);
+				x =x- dirX;
+			}
+			y =y+ dirY;
 			
-			mvwprintw(stdscr, y, x, "");
-			addch('1' | A_STANDOUT);
-			} 
-			while (x != x2 || y != y2);
-		}
+			move(y, x);
+			addch(' ' | A_STANDOUT);
+		} 
+		while (x != x2 || y != y2);
 	}
 }
 
@@ -85,19 +84,21 @@ void LineBuild(int x1, int y1, int x2, int y2) //координаты 2х точ
 void main()
 {
 	int row, col;
+	
+	initscr();
+	refresh();
 	//int ColorMatrix[];
 	int Depth;
 	
-	initscr(); //Вход в ncurses, создание основного окна
+	//printf("test");
+	LineBuild(1,1,2,9);
+	LineBuild(2,9,11,10);
+	LineBuild(11,10,10,2);
+	LineBuild(1,1,10,2);
 	
 	getmaxyx(stdscr, row, col);
 	mvwprintw(stdscr, row - 1, 0, "The number of rows - %d and columns - %d\n", row, col);
 	
-	LineBuild(2,2,8,10);
-	
-	refresh(); //проверка буфера
-	
-	getch(); //ожидание нажатия
-	
-	endwin(); //закрытие окна и приложения
+	getch();
+	endwin();
 }
