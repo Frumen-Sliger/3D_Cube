@@ -120,7 +120,7 @@ void LineBuild(int x1, int y1, int x2, int y2) //координаты 2х точ
 
 
 void triangleRast(int x1, int y1, int x2, int y2, int x3, int y3)
-{
+{ 
 	int row, col; //оцентровка
 	getmaxyx(stdscr, row, col);
 	x1 = x1 + (col/2);
@@ -276,6 +276,12 @@ void coloredTriangle(uint8_t color, int x1, int y1, int x2, int y2, int x3, int 
 	attroff(COLOR_PAIR(color));
 }
 
+void dobColoredSquare(uint8_t color1, uint8_t color2, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
+{
+	coloredTriangle(color1, x1, y1, x2, y2, x3, y3);
+	coloredTriangle(color2, x1, y1, x4, y4, x3, y3);
+}
+
 void main()
 {
 	initscr();
@@ -289,12 +295,13 @@ void main()
 	refresh();
 	//int ColorMatrix[];
 	int Depth;
-	
-	//Col Triangle takes -COLOR- x/y1 x/y2 x/y3 (7 param)
-	coloredTriangle(GRAY5, -5, -15, 5, -5, 5, 5); //--
-	
-	coloredTriangle(GRAY7, -5, -15, -5, 1, 5, 5); 
-	//coloredTriangle(GRAY5, -5, -5, 5, -5, 5, 5);
+	//1- 0, 0 
+	//2- 0, 10
+	//3- 10, 5
+	//4- 10, -5
+	dobColoredSquare(GRAY4, GRAY3, 0, 10, 10, 5, 10, -5, 0, 0);
+	dobColoredSquare(GRAY5, GRAY6, -10, -5, -10, 5, 0, 10, 0, 0);
+	dobColoredSquare(GRAY7, GRAY8, -10, -5, 0, -10, 10, -5, 0, 0);
 	
 	attron(COLOR_PAIR(GRAY10));
 	mvaddch(row, col,'*' | A_STANDOUT);
