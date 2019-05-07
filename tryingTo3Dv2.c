@@ -66,27 +66,11 @@ void ColorGen()
 	init_pair(Def, COLOR_WHITE, COLOR_BLACK);
 }
 
-void vis(int x, int y, int z, char space) //visualisation
-{
-	char Space[][][] = space;
-	int a,b,c;
-	for(a = 0; a<x; a++)
-	{
-		for(b = 0; b<y; b++)
-		{
-			for(c = 0; c<z; c++)
-			{
-				if(mvwprintw(stdscr,x,y,"-"));
-			}
-		}
-	}
-}
-
 void main()
 {
+	int a, b, c;
 	int x, y, z; //  x,y,z
 	int centre[3] = {0,0,0}; //центр
-	
 	
 	initscr();
 	int row, col; //оцентровка
@@ -96,26 +80,49 @@ void main()
 	y = row; //по y идентично высоте экрана
 	z = x;   //по z идентично х, (ширина = глубина)
 	
-	char Space[x][y][z]; //создание 3хмерного пространства
+	char *Space[x][y][z]; //создание 3хмерного пространства
 	
-	row = row/2;
+	row = row/2; //деление элементов для поиска центра
 	col = col/2;
 	
-	centre[0] = col;
+	centre[0] = col; //запись центра
 	centre[1] = row;
 	centre[2] = col;
 	
-	vis(x, y, z, Space);
 	
 	ColorGen();
 	refresh();
 	
+	//Заполнение пространства нулями
+	for (a = 0; a < x; a++)
+	{
+		for (b = 0; b < y; b++)
+		{
+			for (c = 0; c < z; c++)
+			{
+				Space[a][b][c] = "o";
+			}
+		}	
+	}
+	
+	//Вывод пространства
+	for (b = 0; b < y; b++)
+	{
+		for (a = 0; a < x; a++)
+		{
+			for (c = 0; c < z; c++)
+			{
+				mvwprintw(stdscr, b, a, "%c", Space[a][b][c]);
+				//getchar();
+			}
+		}	
+	}
+	
+	mvwprintw(stdscr, centre[1], centre[0], "%c", Space[a][b][c]);
 	attron(COLOR_PAIR(GRAY10));
 	
 	getmaxyx(stdscr, row, col);
 	mvwprintw(stdscr, 0, 0, "The number of rows - %d and columns - %d\n", row, col);
-	
-	
 	
 	getch();
 	endwin();
